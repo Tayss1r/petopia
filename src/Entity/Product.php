@@ -39,7 +39,7 @@ class Product
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
 
-    #[ORM\Column(type: "string", enumType: animalType::class)]
+    #[ORM\Column(type: 'string', enumType: animalType::class)]
     private ?animalType $type = null;
 
     public function getId(): ?int
