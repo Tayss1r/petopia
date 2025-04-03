@@ -34,16 +34,10 @@ final class ProductController extends AbstractController
         ProductRepository $productRepository,
         CategoryRepository $categoryRepository
     ): Response {
-        // Fetch the products based on animalType and categoryName
         $products = $productRepository->findByCategory($animalType, $categoryName);
 
-        // Fetch all categories if you want to display them in the menu
         $categories = $categoryRepository->findAll();
-
-        // You can also fetch animal types if needed
         $animalType = animalType::cases();
-
-        // Render the page, passing the relevant data to the template
         return $this->render('category/category.html.twig', [
             'products' => $products,
             'categories' => $categories,
