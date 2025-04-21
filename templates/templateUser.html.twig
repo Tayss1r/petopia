@@ -132,6 +132,14 @@
                         </li>
                     {% endfor %}
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="menu-item">
+                        <a href="{{ path('app_edit_product') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-collection"></i>
+                            <div data-i18n="Basic">Add New Product</div>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
 
         </aside>
