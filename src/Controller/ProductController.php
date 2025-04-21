@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\Product;
 use App\Enum\animalType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
@@ -16,6 +15,19 @@ final class ProductController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
     public function sidebar(ManagerRegistry $doctrine): Response
+    {
+        $repo = $doctrine->getRepository(Category::class);
+        $categories = $repo->findAll();
+        $animalType = animalType::cases();
+
+        return $this->render('home.html.twig', [
+            'categories' => $categories,
+            'animalType' => $animalType,
+        ]);
+    }
+
+    #[Route('/product/add', name: 'app_home')]
+    public function addNewProduct(ManagerRegistry $doctrine): Response
     {
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();

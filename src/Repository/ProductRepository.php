@@ -22,9 +22,9 @@ class ProductRepository extends ServiceEntityRepository
     public function findByCategory($animalType, $categoryName): array
     {
         return $this->createQueryBuilder('p')
-            ->join('p.category', 'c')  // Assuming there's a 'category' relation in Product entity
+            ->join('p.category', 'c')
             ->andWhere('p.type = :animalType')
-            ->andWhere('c.name = :categoryName')  // Assuming 'name' is the category field in the Category entity
+            ->andWhere('c.name = :categoryName')
             ->setParameter('animalType', $animalType)
             ->setParameter('categoryName', $categoryName)
             ->getQuery()
