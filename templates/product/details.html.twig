@@ -1,0 +1,32 @@
+{% extends 'templateUser.html.twig' %}
+
+{% block title %}Product Details{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% if product %}
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ asset('assets/img/products/' ~ product.image) }}" class="img-fluid rounded-start" alt="{{ product.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ product.name }}</h3>
+                            <p class="card-text"><strong>Price:</strong> {{ product.price }} $</p>
+                            <p class="card-text"><strong>Description:</strong> {{ product.description }}</p>
+                            <p class="card-text"><strong>Type:</strong> {{ product.type.name }}</p>
+                            {% if product.stock > 0 %}
+                                <p class="card-text"><span class="badge bg-label-success me-1">in stock</span></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                Product not found.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

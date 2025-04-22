@@ -81,7 +81,7 @@
                                     <h5 class="card-title">{{ product.name }}</h5>
                                     <p class="card-text">{{ product.description }}</p>
                                     <a href="javascript:void(0)" class="btn btn-outline-primary">Add to cart</a>
-                                    <a href="" class="btn btn-outline-primary">Details</a>
+                                    <a href="{{ path('app_detail_product', {id : product.id}) }}" class="btn btn-outline-primary">Details</a>
                                 </div>
                             </div>
                         </div>

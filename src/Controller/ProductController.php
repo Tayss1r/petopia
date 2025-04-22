@@ -45,7 +45,18 @@ final class ProductController extends AbstractController
         ]);
     }
 
-
+    #[Route('/details/{id?0}', name: 'app_detail_product')]
+    public function details(Product $product = null, ManagerRegistry $doctrine): Response
+    {
+        $repo = $doctrine->getRepository(Category::class);
+        $categories = $repo->findAll();
+        $animalType = animalType::cases();
+        return $this->render('product/details.html.twig', [
+            'product' => $product,
+            'categories' => $categories,
+            'animalType' => $animalType
+        ]);
+    }
     #[Route('/edit{id?0}', name: 'app_edit_product')]
     public function editProduct(
         Product $product = null,
