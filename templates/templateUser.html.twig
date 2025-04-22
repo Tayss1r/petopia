@@ -75,7 +75,7 @@
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo">
-                <a href="index.html" class="app-brand-link">
+                <a href="{{ path('app_home') }}" class="app-brand-link">
               <span class="app-brand-logo demo">
                     <img src="../assets/img/logo/cat.png" alt="Brand Logo" class="img-fluid" width="35"/>
               </span>
@@ -92,9 +92,9 @@
             <ul class="menu-inner py-1">
                 <!-- Dashboard -->
                 <li class="menu-item active">
-                    <a href="{{ path('app_home') }}" class="menu-link">
+                    <a href="{{ path('app_all_product') }}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <div data-i18n="Analytics">Home</div>
+                        <div data-i18n="Analytics">All Products</div>
                     </a>
                 </li>
 
@@ -162,13 +162,21 @@
                     <!-- Search -->
                     <div class="navbar-nav align-items-center">
                         <div class="nav-item d-flex align-items-center">
-                            <i class="bx bx-search fs-4 lh-0"></i>
-                            <input
-                                    type="text"
-                                    class="form-control border-0 shadow-none"
-                                    placeholder="Search..."
-                                    aria-label="Search..."
-                            />
+
+                            <form action="{{ path('app_search_product') }}" method="get" class="d-flex">
+                                <button type="submit" class="btn btn-icon">
+                                    <i class="bx bx-search fs-4"></i>
+                                </button>
+                                <input
+                                        type="text"
+                                        name="q"
+                                        class="form-control border-0 shadow-none"
+                                        placeholder="Search..."
+                                        aria-label="Search..."
+                                />
+
+                            </form>
+
                         </div>
                     </div>
                     <!-- /Search -->
@@ -193,8 +201,23 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">John Doe</span>
-                                                <small class="text-muted">Admin</small>
+                                                {% if app.user %}
+                                                    <span class="fw-semibold d-block">{{ app.user.email|split('@')[0] }}</span>
+                                                    <small class="text-muted">
+                                                        {% if 'ROLE_ADMIN' in app.user.roles %}
+                                                            Admin
+                                                        {% elseif 'ROLE_USER' in app.user.roles %}
+                                                            User
+                                                        {% else %}
+                                                            Unknown Role
+                                                        {% endif %}
+                                                    </small>
+                                                {% else %}
+                                                    <span class="fw-semibold d-block">Guest</span>
+                                                    <small class="text-muted">No role assigned</small>
+                                                {% endif %}
+
+
                                             </div>
                                         </div>
                                     </a>

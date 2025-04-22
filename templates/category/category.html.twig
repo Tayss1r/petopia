@@ -74,13 +74,12 @@
                     {% for product in products %}
                         <div class="col-md-6 col-lg-4 mb-3">
                             <div class="card h-100">
-                                <img class="card-img-top" src="../assets/img/products/{{ product.image }}"
+                                <img class="card-img-top mx-auto d-block mt-2" src="../assets/img/products/{{ product.image }}"
                                      alt="Product image"
-                                     style="width: 100%; height: 250px; object-fit: cover;">
+                                     style="width: 50%; height: 200px;">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ product.name }}</h5>
-                                    <p class="card-text">{{ product.description }}</p>
-                                    <a href="javascript:void(0)" class="btn btn-outline-primary">Add to cart</a>
+                                    <p>{{ product.description|slice(0, 40) }}{% if product.description|length > 40 %}...{% endif %}</p>
                                     <a href="{{ path('app_detail_product', {id : product.id}) }}" class="btn btn-outline-primary">Details</a>
                                 </div>
                             </div>

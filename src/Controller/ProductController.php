@@ -20,7 +20,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ProductController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
+    #[Route('/AllProduct', name: 'app_all_product')]
     public function findAll(ManagerRegistry $doctrine, PaginatorInterface $paginator, Request $request): Response
     {
         $repo = $doctrine->getRepository(Category::class);
@@ -35,10 +35,10 @@ final class ProductController extends AbstractController
         $products = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            5
+            6
         );
 
-        return $this->render('home.html.twig', [
+        return $this->render('allProduct.html.twig', [
             'categories' => $categories,
             'animalType' => $animalType,
             'products' => $products
@@ -150,6 +150,40 @@ final class ProductController extends AbstractController
         $animalType = animalType::cases();
         return $this->render('category/category.html.twig', [
             'products' => $products,
+            'categories' => $categories,
+            'animalType' => $animalType,
+        ]);
+    }
+
+    #[Route('/search', name: 'app_search_product', methods: ['GET'])]
+    public function SearchProduct(ManagerRegistry $doctrine, Request $request, ProductRepository $productRepository): Response
+    {
+        $query = $request->query->get('q', '');
+        $products = [];
+
+        if (!empty($query)) {
+            $products = $productRepository->searchByName($query);
+        }
+        $repo = $doctrine->getRepository(Category::class);
+        $categories = $repo->findAll();
+        $animalType = animalType::cases();
+
+        return $this->render('product/searchProduct.html.twig', [
+            'products' => $products,
+            'query' => $query,
+            'categories' => $categories,
+            'animalType' => $animalType,
+        ]);
+    }
+
+    #[Route('/home', name: 'app_home')]
+    public function home(ManagerRegistry $doctrine): Response
+    {
+        $repo = $doctrine->getRepository(Category::class);
+        $categories = $repo->findAll();
+        $animalType = animalType::cases();
+
+        return $this->render('home.html.twig', [
             'categories' => $categories,
             'animalType' => $animalType,
         ]);
