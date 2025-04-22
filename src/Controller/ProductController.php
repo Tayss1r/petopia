@@ -9,26 +9,42 @@ use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ProductController extends AbstractController
 {
     #[Route('/home', name: 'app_home')]
-    public function sidebar(ManagerRegistry $doctrine): Response
+    public function findAll(ManagerRegistry $doctrine, PaginatorInterface $paginator, Request $request): Response
     {
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();
         $animalType = animalType::cases();
+        $repository = $doctrine->getRepository(Product::class);
+
+        $query = $repository->createQueryBuilder('p')
+            ->orderBy('p.id', 'ASC')
+            ->getQuery();
+
+        $products = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            5
+        );
 
         return $this->render('home.html.twig', [
             'categories' => $categories,
             'animalType' => $animalType,
+            'products' => $products
         ]);
     }
+
 
     #[Route('/edit{id?0}', name: 'app_edit_product')]
     public function editProduct(
@@ -98,6 +114,17 @@ final class ProductController extends AbstractController
 
     }
 
+    #[Route('/delete/{id}', 'app_delete_product'),
+        isGranted('ROLE_ADMIN')
+    ]
+    public function delete(Product $product = null, ManagerRegistry $doctrine): RedirectResponse{
+        if($product) {
+            $manager = $doctrine->getManager();
+            $manager->remove($product);
+            $manager->flush();
+        }
+        return $this->redirectToRoute('app_home');
+    }
 
     #[Route('/{animalType}/{categoryName}', name: 'app_category')]
     public function findProduct(

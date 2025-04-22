@@ -1,7 +1,78 @@
 {% extends 'templateUser.html.twig' %}
 
 {% block body %}
-    {{ form(form) }}
+    <div class="col-xl">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Add Product</h5>
+                <small class="text-muted float-end">Product Info</small>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-package"></i></span>
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Product name'}}) }}
+                    </div>
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Price</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-dollar-circle"></i></span>
+                        {{ form_widget(form.price, {'attr': {'class': 'form-control', 'placeholder': 'e.g. 10.00'}}) }}
+                    </div>
+                    {{ form_errors(form.price) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-comment-detail"></i></span>
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Product description'}}) }}
+                    </div>
+                    {{ form_errors(form.description) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Stock</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-cube-alt"></i></span>
+                        {{ form_widget(form.stock, {'attr': {'class': 'form-control', 'placeholder': 'Quantity in stock'}}) }}
+                    </div>
+                    {{ form_errors(form.stock) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Type</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-category"></i></span>
+                        {{ form_widget(form.type, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    {{ form_errors(form.type) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-layer"></i></span>
+                        {{ form_widget(form.category, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Insert product image</label>
+                    {{ form_widget(form.photo, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.photo) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block title %}
