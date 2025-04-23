@@ -8,4 +8,5 @@ enum animalType: string
     case Cat = 'Cat';
     case Fish = 'Fish';
     case Bird = 'Bird';
+    case chicken = 'Chicken';
 }

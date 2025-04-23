@@ -116,11 +116,11 @@ final class ProductController extends AbstractController
             $this->addFlash('success', $product->getName() . $message);
             return $this->redirectToRoute('app_home');
         }
-
         return $this->render('product/addProduct.html.twig', [
             'form' => $form->createView(),
             'categories' => $categories,
             'animalType' => $animalType,
+            'product' => $product
         ]);
 
     }

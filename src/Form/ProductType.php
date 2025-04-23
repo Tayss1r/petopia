@@ -55,7 +55,6 @@ class ProductType extends AbstractType
                     ])
                 ],
             ])
-            ->add('add', SubmitType::class)
         ;
     }
 

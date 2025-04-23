@@ -18,7 +18,7 @@
                             <p class="card-text"><strong>Type:</strong> {{ product.type.name }}</p>
                             {% if product.stock > 0 %}
                                 <p class="card-text"><span class="badge bg-label-success me-1">in stock</span></p>
-                            {% elseif product.stock < 0%}
+                            {% elseif product.stock <= 0%}
                                 <p class="card-text"><span class="badge bg-label-danger me-1">out of stock</span></p>
                             {% endif %}
                         </div>
