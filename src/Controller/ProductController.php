@@ -35,7 +35,7 @@ final class ProductController extends AbstractController
         $products = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            6
+            4
         );
 
         return $this->render('allProduct.html.twig', [
@@ -162,7 +162,7 @@ final class ProductController extends AbstractController
         $products = [];
 
         if (!empty($query)) {
-            $products = $productRepository->searchByName($query);
+            $products = $productRepository->search($query, $query);
         }
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();

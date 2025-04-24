@@ -30,11 +30,13 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    public function searchByName(string $name): array
+    public function search(string $name, String $desc): array
     {
         return $this->createQueryBuilder('p')
             ->where('p.name LIKE :name')
+            ->orWhere('p.description LIKE :desc')
             ->setParameter('name', '%' . $name . '%')
+            ->setParameter('desc', '%' . $desc . '%')
             ->getQuery()
             ->getResult();
     }

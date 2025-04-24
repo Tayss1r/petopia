@@ -91,6 +91,7 @@
                                     <h5 class="card-title">{{ product.name }}</h5>
                                     <p>{{ product.description|slice(0, 40) }}{% if product.description|length > 40 %}...{% endif %}</p>
                                     <a href="{{ path('app_detail_product', {id : product.id}) }}" class="btn btn-outline-primary">Details</a>
+                                    <a href="{{ path('app_add_cart', {id: product.id}) }}" class="btn btn-outline-primary">Add to cart</a>
                                 </div>
                             </div>
                         </div>
