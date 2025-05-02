@@ -89,11 +89,9 @@ final class ProductController extends AbstractController
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$photoFile->guessExtension();
 
                 try {
-                    // Déplace le fichier vers le répertoire configuré
                     $directory = $this->getParameter('imageDirectory');
                     $photoFile->move($directory, $newFilename);
 
-                    // Enregistre le nom de fichier dans l'entité
                     $product->setImage($newFilename);
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Error while uploading : ' . $e->getMessage());
