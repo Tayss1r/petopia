@@ -73,4 +73,33 @@ final class CartController extends AbstractController
 
         return $this->redirectToRoute('app_all_product');
     }
+    #[Route('/cart/delete/{id}', name: 'app_delete_from_cart', methods: ['GET'])]
+    public function deleteFromCart(int $id, SessionInterface $session, Request $request): Response
+    {
+        $cart = $session->get('cart', []);
+        if(!empty($cart[$id])) {
+            unset($cart[$id]);
+        }
+        // Save the updated cart back to the session
+        $session->set('cart', $cart);
+
+        $referer = $request->headers->get('referer');
+        if ($referer) {
+            return $this->redirect($referer);
+        }
+
+        return $this->redirectToRoute('app_cart');
+    }
+
+    #[Route('/cart/delete', name: 'app_delete_cart', methods: ['GET'])]
+    public function deleteCart(SessionInterface $session, Request $request): Response
+    {
+        $session->set('cart', []);
+        $referer = $request->headers->get('referer');
+        if ($referer) {
+            return $this->redirect($referer);
+        }
+
+        return $this->redirectToRoute('app_cart');
+    }
 }

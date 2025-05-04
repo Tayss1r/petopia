@@ -20,7 +20,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class ProductController extends AbstractController
 {
-    #[Route('/AllProduct', name: 'app_all_product')]
+    #[Route('/', name: 'app_all_product')]
     public function findAll(ManagerRegistry $doctrine, PaginatorInterface $paginator, Request $request): Response
     {
         $repo = $doctrine->getRepository(Category::class);
@@ -35,7 +35,7 @@ final class ProductController extends AbstractController
         $products = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
-            4
+            6
         );
 
         return $this->render('allProduct.html.twig', [

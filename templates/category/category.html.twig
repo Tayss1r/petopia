@@ -65,7 +65,7 @@
             </div>
 
         {% endif %}
-    {% elseif is_granted('ROLE_USER') %}
+    {% else %}
         <div class="container">
             <div class="row">
                 {% if products is empty %}
