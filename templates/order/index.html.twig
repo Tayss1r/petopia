@@ -1,0 +1,71 @@
+{% extends 'templateUser.html.twig' %}
+
+{% block body %}
+    <div class="col-xl">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Checkout</h5>
+                <small class="text-muted float-end">Order Info</small>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-user"></i></span>
+                        {{ form_widget(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'First name'}}) }}
+                    </div>
+                    {{ form_errors(form.firstName) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-user"></i></span>
+                        {{ form_widget(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Last name'}}) }}
+                    </div>
+                    {{ form_errors(form.lastName) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-phone"></i></span>
+                        {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control', 'placeholder': 'Phone number'}}) }}
+                    </div>
+                    {{ form_errors(form.phoneNumber) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-map"></i></span>
+                        {{ form_widget(form.address, {'attr': {'class': 'form-control', 'placeholder': 'Address'}}) }}
+                    </div>
+                    {{ form_errors(form.address) }}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">City</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-building-house"></i></span>
+                        {{ form_widget(form.city, {'attr': {'class': 'form-select'}}) }}
+                    </div>
+                    {{ form_errors(form.city) }}
+                </div>
+
+                <div class="mb-3 mt-4 text-end">
+                    <h5 class="fw-bold text-primary text-start">Total: {{ total }} $</h5>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Proceed to payment</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+    Edit Order
+{% endblock %}
