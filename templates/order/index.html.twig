@@ -56,7 +56,13 @@
                 </div>
 
                 <div class="mb-3 mt-4 text-end">
-                    <h5 class="fw-bold text-primary text-start">Total: {{ total }} $</h5>
+                    <h5 id="card-price" class="fw-bold text-primary text-start">Price: {{ total }} $</h5>
+                </div>
+                <div class="mb-3 mt-4 text-end">
+                    <h5 class="fw-bold text-primary text-start">Shipping tax: <span id="shippingCost"></span> $</h5>
+                </div>
+                <div class="mb-3 mt-4 text-end">
+                    <h5 class="fw-bold text-primary text-start">Total: <span class="total-price"></span> $</h5>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Proceed to payment</button>
@@ -64,8 +70,36 @@
             </div>
         </div>
     </div>
-{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        //i used jQuery 'cuz i wanted the price to update without reloading the page
+        $(document).ready(function(){
+           const citySelector = $('#order_city')
+           const cityValue = citySelector.val();
+           const url = `http://127.0.0.1:8000/city/${cityValue}/shippingCost`;
 
-{% block title %}
-    Edit Order
+           function ajaxRequest(url) {
+               $.ajax({
+                   url: url,
+                   method: 'GET',
+                   success: function(response){
+                       const newResponse = JSON.parse(response);
+                       if(parseInt(newResponse.status) === 200){
+                           console.log(newResponse.status);
+                           $('#shippingCost').text(newResponse.content);
+                           const cardPrice = parseFloat($('#card-price').text().replace(/\D/g, '')); // bech textracti kenchi price meghir sign
+                           const shippingCost = parseFloat($('#shippingCost').text()); //methode okhra mtaa span
+                           $('.total-price').text((cardPrice+shippingCost).toFixed(2));
+                       }
+                   },
+                   error: function(xhr, status, error) {}
+               })
+           }
+           ajaxRequest(url);
+            citySelector.on('change', function(){
+                const $urlUpdate = `http://127.0.0.1:8000/city/${$(this).val()}/shippingCost`;
+                ajaxRequest($urlUpdate);
+            })
+        })
+    </script>
 {% endblock %}

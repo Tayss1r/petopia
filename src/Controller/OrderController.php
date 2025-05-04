@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\City;
 use App\Entity\Order;
 use App\Enum\animalType;
 use App\Form\OrderType;
@@ -45,5 +46,11 @@ final class OrderController extends AbstractController
             'animalType' => $animalType,
             'total' => $total,
         ]);
+    }
+
+    #[Route('/city/{id}/shippingCost', name: 'app_shipping_cost')]
+    public function cityShippingCost(City $city): Response {
+        $cityShippingPrice = $city->getShippingCost();
+        return new Response(json_encode(['status' => 200, 'message' => 'on', 'content'=>$cityShippingPrice]));
     }
 }
