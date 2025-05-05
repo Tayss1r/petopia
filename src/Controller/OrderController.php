@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\City;
 use App\Entity\Order;
+use App\Entity\OrderProducts;
 use App\Enum\animalType;
 use App\Form\OrderType;
+use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Service\Cart;
 use Doctrine\ORM\EntityManager;
@@ -29,26 +31,30 @@ final class OrderController extends AbstractController
         Cart $cart
     ): Response
     {
-        $cart = $session->get('cart', []);
-        $cartWithData = [];
-        foreach ($cart as $id => $quantity) {
-            $cartWithData [] = [
-                'product' => $productRepository->find($id),
-                'quantity' => $quantity
-            ];
-        }
-        $total = array_sum(array_map(function ($item) {
-            return $item['product']->getPrice() * $item['quantity'];
-        }, $cartWithData));
+        $data = $cart->getCart($session);
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
-        $form->remove('createdAt');
         if($form->isSubmitted() && $form->isValid()) {
             if($order->isPayOnDelivery()) {
-
+                //dd($order);
+                if(!empty($data['total'])) {
+                    $order->setTotalPrice($data['total']);
+                    $order->setCreatedAt(new \DateTimeImmutable());
+                    $entityManager->persist($order);
+                    $entityManager->flush();
+                    foreach ($data['cart'] as $value) {
+                        $orderProduct = new OrderProducts();
+                        $orderProduct->setOrder($order);
+                        $orderProduct->setProduct($value['product']);
+                        $orderProduct->setQuantity($value['quantity']);
+                        $entityManager->persist($orderProduct);
+                        $entityManager->flush();
+                    }
+                }
+                $session->set('cart', []);
+                return $this->redirectToRoute('app_cart');
             }
-            $order->setCreatedAt(new \DateTimeImmutable());
         }
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();
@@ -57,7 +63,21 @@ final class OrderController extends AbstractController
             'form' => $form->createView(),
             'categories' => $categories,
             'animalType' => $animalType,
-            'total' => $total,
+            'total' => $data['total'],
+        ]);
+    }
+
+    #[Route('/order/all', name: 'app_order_show')]
+    public function show(OrderRepository $orderRepository, ManagerRegistry $doctrine): Response
+    {
+        $order = $orderRepository->findAll();
+        $repo = $doctrine->getRepository(Category::class);
+        $categories = $repo->findAll();
+        $animalType = animalType::cases();
+        return $this->render('order/show.html.twig', [
+            'orders' => $order,
+            'categories' => $categories,
+            'animalType' => $animalType
         ]);
     }
 

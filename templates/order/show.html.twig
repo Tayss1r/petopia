@@ -1,0 +1,82 @@
+{% extends 'templateUser.html.twig' %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        {% if orders|length > 0 %}
+            <div class="card">
+                <h5 class="card-header">List of Orders</h5>
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone Number</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th>Created At</th>
+                            <th>Pay on Delivery</th>
+                            <th>Total Price</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.firstName }}</td>
+                                <td>{{ order.lastName }}</td>
+                                <td>{{ order.phoneNumber }}</td>
+                                <td>{{ order.address }}</td>
+                                <td>{{ order.city.name }}</td>
+                                <td>{{ order.createdAt|date('Y-m-d H:i') }}</td>
+                                <td>
+                                    {% if order.payOnDelivery %}
+                                        <span class="badge bg-label-success">Yes</span>
+                                    {% else %}
+                                        <span class="badge bg-label-danger">No</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ order.totalPrice|number_format(2, ',', ' ') }} $</td>
+                                <td>
+                                    <a href="{{ path('app_order_show', {id: order.id}) }}" class="btn btn-sm btn-outline-primary">Details</a>
+                                </td>
+                            </tr>
+                            {# sous-table des produits commandés #}
+                            <tr>
+                                <td colspan="9">
+                                    <table class="table table-bordered mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for product in order.orderProducts %}
+                                            <tr>
+                                                <td>{{ product.product.name }}</td>
+                                                <td>{{ product.product.price|number_format(2, ',', ' ') }} $</td>
+                                                <td>{{ product.quantity }}</td>
+                                                <td>{{ (product.product.price * product.quantity)|number_format(2, ',', ' ') }} $</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center">
+                No orders to show.
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
+

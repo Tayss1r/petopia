@@ -18,9 +18,6 @@ class OrderType extends AbstractType
             ->add('lastName')
             ->add('phoneNumber')
             ->add('address')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
             ->add('city', EntityType::class, [
                 'class' => City::class,
                 'choice_label' => 'name',
