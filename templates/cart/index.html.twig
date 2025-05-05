@@ -9,7 +9,7 @@
                     <a href="{{ path('app_delete_cart') }}" class="btn btn-outline-danger btn-sm">
                         <i class="bx bx-x me-1"></i> Cancel All
                     </a>
-                    <a href="#" class="btn btn-outline-primary btn-sm">
+                    <a data-turbo="false" href="{{ path('app_order') }}" class="btn btn-outline-primary btn-sm">
                         <i class="bx bx-check me-1 mb-1"></i> Validate Order
                     </a>
                 </div>

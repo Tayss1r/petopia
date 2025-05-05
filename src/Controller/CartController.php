@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 use App\Enum\animalType;
 use App\Repository\ProductRepository;
+use App\Service\Cart;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -15,29 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class CartController extends AbstractController
-{
-    public function __construct(private readonly ProductRepository $ProductRepository){}
+final class CartController extends AbstractController {
     #[Route('/cart', name: 'app_cart', methods: ['GET'])]
-    public function index(SessionInterface $session, ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator): Response
+    public function index(SessionInterface $session, ManagerRegistry $doctrine, Request $request, PaginatorInterface $paginator, Cart $cart): Response
     {
-        $cart = $session->get('cart', []);
-        $cartWithData = [];
-        foreach ($cart as $id => $quantity) {
-            $cartWithData [] = [
-                'product' => $this->ProductRepository->find($id),
-                'quantity' => $quantity
-            ];
-        }
-        $total = array_sum(array_map(function ($item) {
-            return $item['product']->getPrice() * $item['quantity'];
-        }, $cartWithData));
+        $data = $cart->getCart($session);
         //dd($cartWithData);
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();
         $animalType = animalType::cases();
 
-        $itemsCollection = new ArrayCollection($cartWithData);
+        $itemsCollection = new ArrayCollection($data['cart']);
 
         $pagination = $paginator->paginate(
             $itemsCollection, // the data to paginate
@@ -47,7 +36,7 @@ final class CartController extends AbstractController
 
         return $this->render('cart/index.html.twig', [
             'items' => $pagination,
-            'total' => $total,
+            'total' => $data['total'],
             'categories' => $categories,
             'animalType' => $animalType,
             'pagination' => $pagination
