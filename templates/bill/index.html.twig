@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        class="light-style layout-menu-fixed"
+        dir="ltr"
+        data-theme="theme-default"
+        data-assets-path="{{ asset('assets') }}"
+        data-template="vertical-menu-template-free"
+>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice #{{ order.id }}</title>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/logo/cat.png') }}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}" />
+    <script src="{{ asset('assets/js/config.js') }}"></script>
+
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            padding: 40px;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .invoice-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .invoice-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .company-logo {
+            height: 60px;
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h4 {
+            margin-bottom: 10px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            font-weight: 600;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .print-btn {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="invoice-box">
+    <!-- <div class="print-btn no-print">
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print</button>
+    </div> -->
+
+    <div class="invoice-header">
+        <div class="invoice-title">Invoice #{{ order.id }}</div>
+        <!-- <img src="{{ asset('assets/img/logo/cat.png') }}" class="company-logo" alt="Logo"> -->
+    </div>
+
+    <div class="info-section">
+        <h4>Customer Information</h4>
+        <p><strong>Name:</strong> {{ order.firstName }} {{ order.lastName }}</p>
+        <p><strong>Phone:</strong> {{ order.phoneNumber }}</p>
+        <p><strong>Address:</strong> {{ order.address }}, {{ order.city.name }}</p>
+        <p><strong>Pay on Delivery:</strong> {{ order.payOnDelivery ? 'Yes' : 'No' }}</p>
+        <p><strong>Date:</strong> {{ order.createdAt|date('Y-m-d H:i') }}</p>
+        <h4>Order Information</h4>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit Price ($)</th>
+            <th>Quantity</th>
+            <th>Subtotal ($)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in order.orderProducts %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price|number_format(2, '.', ' ') }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ (item.product.price * item.quantity)|number_format(2, '.', ' ') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3" style="text-align:right;">Total</td>
+            <td>{{ order.totalPrice|number_format(2, '.', ' ') }} $</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="footer">
+        Thank you for choosing Petopia!
+    </div>
+</div>
+</body>
+</html>

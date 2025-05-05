@@ -81,6 +81,23 @@ final class OrderController extends AbstractController
         ]);
     }
 
+    #[Route('/order/{id}/is-completed/update', name: 'app_delete_is_completed')]
+    public function isCompletedUpdate($id, OrderRepository $orderRepository, EntityManagerInterface $entityManager): Response
+    {
+        $order = $orderRepository->find($id);
+        $order->setIsCompleted(true);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_order_show');
+    }
+
+    #[Route('/order/{id}/delete', name: 'app_delete_order', methods: ['GET'])]
+    public function deleteOrder(Order $order, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($order);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_order_show');
+    }
+
     #[Route('/city/{id}/shippingCost', name: 'app_shipping_cost')]
     public function cityShippingCost(City $city): Response {
         $cityShippingPrice = $city->getShippingCost();

@@ -38,8 +38,16 @@
                                 </td>
                                 <td>{{ order.totalPrice|number_format(2, ',', ' ') }} $</td>
                                 <td>
-                                    <a href="{{ path('app_order_show', {id: order.id}) }}" class="btn btn-sm btn-outline-primary">Details</a>
+                                    <a href="{{ path('app_delete_order', {id: order.id}) }}" class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Are you sure you want to delete this order?');">Delete</a>
+                                    <a href="{{ path('app_bill_invoice', {id: order.id}) }}" class="btn btn-sm btn-secondary" target="_blank">Invoice</a>
+                                    {% if order.isCompleted %}
+                                        <span class="badge bg-label-info">Delivered</span>
+                                    {% else %}
+                                        <a href="{{ path('app_delete_is_completed', {id: order.id}) }}" class="btn btn-sm btn-success">Mark as Delivered</a>
+                                    {% endif %}
                                 </td>
+
                             </tr>
                             {# sous-table des produits commandés #}
                             <tr>
