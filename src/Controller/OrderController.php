@@ -14,15 +14,26 @@ use App\Service\Cart;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class OrderController extends AbstractController
 {
+    public function __construct(private readonly MailerInterface $mailer)
+    {
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/order', name: 'app_order')]
     public function index(Request $request, ManagerRegistry $doctrine,
         SessionInterface $session,
@@ -48,11 +59,26 @@ final class OrderController extends AbstractController
                         $orderProduct->setOrder($order);
                         $orderProduct->setProduct($value['product']);
                         $orderProduct->setQuantity($value['quantity']);
+                        $order->addOrderProduct($orderProduct);
                         $entityManager->persist($orderProduct);
                         $entityManager->flush();
                     }
                 }
                 $session->set('cart', []);
+
+                $html = $this->renderView('mail/orderConfirm.html.twig', [
+                    'order' => $order,
+                ]);
+
+                $email = (new TemplatedEmail())
+                    ->from('no-reply@petopia.com')
+                    ->to($order->getEmail())
+                    ->subject('Order Confirmation - Petopia')
+                    ->html($html)
+                ;
+
+                $this->mailer->send($email);
+
                 return $this->redirectToRoute('app_cart');
             }
         }

@@ -6,6 +6,7 @@ use App\Entity\City;
 use App\Entity\Order;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,6 +18,7 @@ class OrderType extends AbstractType
             ->add('firstName')
             ->add('lastName')
             ->add('phoneNumber')
+            ->add('email', EmailType::class)
             ->add('address')
             ->add('city', EntityType::class, [
                 'class' => City::class,

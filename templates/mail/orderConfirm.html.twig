@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: 'Public Sans', Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #dee2e6;
+        }
+        th {
+            background-color: #f1f1f1;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Order Confirmation</h2>
+    <p>Dear {{ order.firstName }} {{ order.lastName }},</p>
+    <p>Thank you for your order. Here are the details:</p>
+
+    <p><strong>Placed on:</strong> {{ order.createdAt|date('Y-m-d H:i') }}</p>
+    <p><strong>Delivery Address:</strong> {{ order.address }}, {{ order.city.name }}</p>
+    <p><strong>Phone:</strong> {{ order.phoneNumber }}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in order.orderProducts %}
+            <tr>
+                <td>{{ product.product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.product.price|number_format(2, ',', ' ') }} $</td>
+                <td>{{ (product.product.price * product.quantity)|number_format(2, ',', ' ') }} $</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>Total:</strong> {{ order.totalPrice|number_format(2, ',', ' ') }} $</p>
+
+    <p>We will contact you when your order is shipped.</p>
+
+    <div class="footer">
+        &copy; {{ "now"|date("Y") }} Petopia. All rights reserved.
+    </div>
+</div>
+</body>
+</html>
+

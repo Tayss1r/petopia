@@ -38,6 +38,15 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
+                    </div>
+                    {{ form_errors(form.email) }}
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">Address</label>
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-map"></i></span>
