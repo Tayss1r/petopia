@@ -11,9 +11,11 @@ use App\Form\OrderType;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Service\Cart;
+use App\Service\stripePayment;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Stripe\Exception\ApiErrorException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +35,7 @@ final class OrderController extends AbstractController
 
     /**
      * @throws TransportExceptionInterface
+     * @throws ApiErrorException
      */
     #[Route('/order', name: 'app_order')]
     public function index(Request $request, ManagerRegistry $doctrine,
@@ -78,9 +81,13 @@ final class OrderController extends AbstractController
                 ;
 
                 $this->mailer->send($email);
-
-                return $this->redirectToRoute('app_cart');
             }
+            $payment = new stripePayment();
+            $shippingCost = $order->getCity()->getShippingCost();
+            $payment->startPayment($data, $shippingCost);
+            $stripeRedirectUrl = $payment->getStripeRedirectUrl();
+
+            return $this->redirect($stripeRedirectUrl);
         }
         $repo = $doctrine->getRepository(Category::class);
         $categories = $repo->findAll();
